@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'employee',
     'server',
 ]
 
@@ -84,6 +85,8 @@ WSGI_APPLICATION = 'dms.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {'default': env.db('DATABASE_URL')}
+
+NULLABLE = {'default': None, 'null': True, 'blank': True}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
