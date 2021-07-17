@@ -7,6 +7,7 @@ import pymssql
 
 
 class DefaultManager(models.Manager):
+    # pylint:disable=too-few-public-methods
 
     pass
 
