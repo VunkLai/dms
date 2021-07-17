@@ -86,6 +86,9 @@ WSGI_APPLICATION = 'dms.wsgi.application'
 
 DATABASES = {'default': env.db('DATABASE_URL')}
 
+# Do not add other databases to DATABASES setting
+BPM_DATABASE = env.db('BPM_DATABASE')
+
 NULLABLE = {'default': None, 'null': True, 'blank': True}
 
 # Password validation

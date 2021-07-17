@@ -1,6 +1,10 @@
+import typing
+from unittest import mock
+
 from django.contrib.admin.sites import AdminSite
 from django.test import TestCase
 
+import pymssql
 from employee.admin import EmployeeModelAdmin
 from employee.models import Employee
 
@@ -20,11 +24,20 @@ class ModelTestCase(TestCase):
 
 class BPMManagerTestCase(TestCase):
 
-    def test_select_all_members_from_bpm(self):
-        pass
+    @mock.patch('employee.models.Employee.from_bpm.execute')
+    def test_select_all_members_from_bpm(self, execute):
+        execute.return_value = ['foo', 'bar']
+        rows = Employee.from_bpm.select_all_members()
+        self.assertIsInstance(rows, typing.Generator)
+        self.assertEqual(len(list(rows)), 2)
 
-    def test_execute(self):
-        pass
+    @mock.patch('employee.models.pymssql.connect')
+    def test_execute(self, db):
+        db.cursor.execute.return_value = ['foo', 'bar']
+        rows = Employee.from_bpm.execute('SELECT foo FROM bar')
+        self.assertIsInstance(rows, typing.Generator)
+        # TODO: the patch of pymssql is incomplete
+        # self.assertEqual(len(list(rows)), 2)
 
 
 class ModelAdminTestCase(TestCase):

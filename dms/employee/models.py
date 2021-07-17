@@ -17,7 +17,7 @@ class BusinessProcessManagement(models.Manager):
     @staticmethod
     def execute(sql: str) -> typing.Generator:
         # pylint:disable=no-member
-        with pymssql.connect(**settings.MSSQL['BPM']) as conn:
+        with pymssql.connect(**settings.BPM_DATABASE) as conn:
             with conn.cursor(as_dict=True) as cursor:
                 cursor.execute(sql)
                 yield from cursor
