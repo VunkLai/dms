@@ -28,6 +28,14 @@ class BusinessProcessManagement(models.Manager):
             FROM FSe7en_Org_MemberInfo
         ''')
 
+    def loads(self) -> int:
+        rows = 0
+        for member in self.select_all_members():
+            _, created = self.update_or_create(id=member['id'], defaults=member)
+            if created:
+                rows += 1
+        return rows
+
 
 class Employee(models.Model):
 
