@@ -318,7 +318,7 @@ function-naming-style=snake_case
 
 # Good variable names which should always be accepted, separated by a comma.
 # The words are perfectly clear for me
-good-names=e, fr, fw, fa, ok, x, s3, Prefix, sn
+good-names=e, fr, fw, fa, ok, x, s3, Prefix, sn, dt
 
 # Good variable names regexes, separated by a comma. If names match any regex,
 # they will always be accepted

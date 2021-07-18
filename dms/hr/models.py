@@ -45,7 +45,9 @@ def log_reader(date: timezone.datetime) -> Generator[Dict, Any, None]:
 class GatewayManager(models.Manager):
     # pylint:disable=too-few-public-methods
 
-    pass
+    def filter_date(self, date: timezone.datetime) -> models.QuerySet:
+        queryset = self.get_queryset()
+        return queryset.filter(date__range=[date, date+timedelta(days=1)])
 
 
 class CardEvent(models.Manager):

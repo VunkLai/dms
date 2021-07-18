@@ -1,0 +1,50 @@
+<h4>{{ date|date:"Y-m-d" }} 門禁紀錄</h4>
+<h5>{{ date|date:"l" }}</h5>
+
+{% for day, record in records.items %}
+<hr />
+<p>{{ day|date:"Y-m-d (l)" }}</p>
+<table border="1" style="border: 1px black solid">
+  <thead>
+    <tr bgcolor="#00B0FF">
+      <th align="center">日期</th>
+      <th align="center">姓名</th>
+      <th align="center">組別</th>
+      <th align="center">進入時間</th>
+      <th align="center">離開時間</th>
+      <th align="center">進入辦公室目的</th>
+      <th align="center">4樓辦公室</th>
+      <th align="center">4樓實驗室</th>
+      <th align="center">8樓辦公室</th>
+      <th align="center">8樓機房</th>
+      <th align="center">10樓辦公室</th>
+      <th align="center">10樓機房</th>
+      <th align="center">是否申請</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in record %}
+    <tr>
+      <td>{{ row.date|date:"n月j日" }}</td>
+      <td align="center">{{ row.name }}</td>
+      <td align="center">{{ row.group|default:"" }}</td>
+      <td align="center">{{ row.start|time:"G:i:s" }}</td>
+      <td align="center">{{ row.end|time:"G:i:s"|default:"-" }}</td>
+      <td align="center">{{ row.target }}</td>
+      <td align="center">{% if row.office_4f %} ✔ {% endif %}</td>
+      <td align="center">{% if row.lab_4f %} ✔ {% endif %}</td>
+      <td align="center">{% if row.office_8f %} ✔ {% endif %}</td>
+      <td align="center">{% if row.engine_8f %} ✔ {% endif %}</td>
+      <td align="center">{% if row.office_10f %} ✔ {% endif %}</td>
+      <td align="center">{% if row.engine_10f %} ✔ {% endif %}</td>
+      <td align="center">{{row.allowed}}</td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td>{{ day|date:"n月j日" }}</td>
+      <td colspan="12">無紀錄</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endfor %}
