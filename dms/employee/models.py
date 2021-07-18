@@ -66,6 +66,7 @@ class Employee(models.Model):
     class Meta:
         db_table = 'employee'
         indexes = [
+            models.Index(fields=['name']),
             models.Index(fields=['group']),
         ]
 
