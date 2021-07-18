@@ -14,10 +14,19 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args: Any, **options: Any) -> str:
-        tmp = settings.BASE_DIR.parent / 'tmp' / 'excels'
-        tmp.mkdir(parents=True, exist_ok=True)
-        excel = models.download_the_first_psmc_excel_of_today(folder=tmp)
+        excel, date = models.download_the_first_psmc_excel_of_today()
+        psmc = models.PsmcExcel.objects.create(
+            name=excel.name, date=date, status='new job')
+        if excel.is_file():
+            psmc.status = 'downloaded'
+            psmc.file = excel
+            psmc.save()
+
         new_excel = models.extract_sheets_from_psmc_excel(excel)
+        if new_excel.is_file():
+            psmc.status = 'extracted'
+            psmc.save()
+
         email = EmailMessage(
             subject='PSMC WIP report',
             from_email=settings.EMAIL_HOST_USER,
@@ -27,10 +36,13 @@ class Command(BaseCommand):
         )
         email.attach_file(new_excel)
         result = email.send(fail_silently=False)
+        psmc.status = 'success' if result > 0 else 'failure'
+        psmc.save()
 
         data = {
             'result': result,
             'recipients': email.recipients(),
             'attachments': [attachment[0] for attachment in email.attachments]
         }
+
         return f'[send] {data}'
