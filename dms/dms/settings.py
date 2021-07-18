@@ -137,6 +137,7 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
 # Email
 
 EMAIL_HOST = 'smtp.office365.com'
@@ -145,3 +146,9 @@ EMAIL_USE_TLS = True
 
 EMAIL_HOST_USER = env.str('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env.str('EMAIL_HOST_PASSWORD')
+
+# Email recipients
+
+EMAIL_JOY = env.str('EMAIL_JOY')
+
+EMAIL_PE_PSMC_TO = env.list('EMAIL_PE_PSMC_TO')
