@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Optional
 
 from django.conf import settings
 from django.utils import timezone
@@ -7,7 +8,7 @@ import pandas
 from server.mails import MailServer
 
 
-def download_the_first_psmc_excel_of_today(folder: Path) -> Path:
+def download_the_first_psmc_excel_of_today(folder: Path) -> Optional[Path]:
     # A datetime object corresponding to 00:00:00
     # on the current date in the current time zone
     today = timezone.localtime().replace(**settings.FOUR_ZEROS)
@@ -26,6 +27,7 @@ def download_the_first_psmc_excel_of_today(folder: Path) -> Path:
                         fw.write(part.get_payload(decode=True))
                     # First only
                     return folder / filename
+        return None
     finally:
         server.disconnect()
 
