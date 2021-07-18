@@ -34,3 +34,6 @@ db.sqlite3-journal
 
 # VSCode
 vscode/
+
+# Server tmp folder
+tmp/
