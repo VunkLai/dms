@@ -1,4 +1,7 @@
+import csv
 import typing
+from pathlib import Path
+from typing import Any, Dict, Generator
 
 from django.conf import settings
 from django.db import models
@@ -6,10 +9,31 @@ from django.db import models
 import pymssql
 
 
-class DefaultManager(models.Manager):
-    # pylint:disable=too-few-public-methods
+def csv_reader(path: Path) -> Generator[Dict, Any, None]:
+    try:
+        with path.open('r', encoding='big5') as fr:
+            data = list(csv.DictReader(fr))
+    except UnicodeDecodeError:
+        with path.open('r', encoding='utf8') as fr:
+            data = list(csv.DictReader(fr))
+    for row in data:
+        yield dict(
+            id=row['employee_id'],
+            name=row['employee_name'] or row['employee_name_en'],
+            group=row['group']
+        )
 
-    pass
+
+class DefaultManager(models.Manager):
+
+    def loads(self) -> int:
+        path = settings.BASE_DIR.parent / 'tmp/employee/members.csv'
+        rows = 0
+        for row in csv_reader(path):
+            _, created = self.update_or_create(id=row['id'], defaults=row)
+            if created:
+                rows += 1
+        return rows
 
 
 class BusinessProcessManagement(models.Manager):
