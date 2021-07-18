@@ -22,7 +22,8 @@ class MailServer:
         self.server.close()
         self.server.logout()
 
-    def search(self, mailbox: str, subject: str, limit: int = -1) -> Generator[EmailMessage, None, None]:
+    def search(self, mailbox: str, subject: str, limit: int = -1
+               ) -> Generator[EmailMessage, None, None]:
         self.server.select(mailbox=mailbox, readonly=True)
         _, data = self.server.search(None, f'(SUBJECT "{subject}")')
         for mail_ids in data:
@@ -33,5 +34,6 @@ class MailServer:
         _, data = self.server.fetch(mail_id, '(RFC822)')
         for response_part in data:
             if isinstance(response_part, tuple):
+                # pylint:disable=unsubscriptable-object
                 yield email.message_from_bytes(
                     response_part[1], policy=policy.default)
