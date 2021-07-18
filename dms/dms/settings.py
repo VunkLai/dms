@@ -154,3 +154,10 @@ EMAIL_JOY = env.str('EMAIL_JOY')
 
 EMAIL_PE_PSMC_OWNER = env.str('EMAIL_PE_PSMC_OWNER')
 EMAIL_PE_PSMC_TO = env.list('EMAIL_PE_PSMC_TO')
+
+
+# Folder
+
+REMOTE_DIR = Path(env.str('REMOTE_DIR'))
+
+CARD_EVENT_DIR = REMOTE_DIR / 'card_event'
