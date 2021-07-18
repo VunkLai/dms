@@ -49,7 +49,7 @@ def download_the_first_psmc_excel_of_today() -> Optional[Path]:
                         fw.write(part.get_payload(decode=True))
                     # First only
                     return folder / filename, date
-        return None, None
+        return None, today
     finally:
         server.disconnect()
 
