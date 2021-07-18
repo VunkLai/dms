@@ -5,9 +5,10 @@ from email.message import EmailMessage
 from pathlib import Path
 from typing import Generator, Iterable
 
-# import pandas
 from django.conf import settings
 from django.utils import timezone
+
+import pandas
 
 
 class MailServer:
@@ -40,7 +41,7 @@ class MailServer:
                     response_part[1], policy=policy.default)
 
 
-def download_the_first_psmc_excel_of_today(folder: Path) -> str:
+def download_the_first_psmc_excel_of_today(folder: Path) -> Path:
     # A datetime object corresponding to 00:00:00
     # on the current date in the current time zone
     today = timezone.localtime().replace(**settings.FOUR_ZEROS)
@@ -58,6 +59,16 @@ def download_the_first_psmc_excel_of_today(folder: Path) -> str:
                     with open(folder / filename, 'wb') as fw:
                         fw.write(part.get_payload(decode=True))
                     # First only
-                    return filename
+                    return folder / filename
     finally:
         server.disconnect()
+
+
+def extract_sheets_from_psmc_excel(path: Path) -> Path:
+    sheets = ['AZRMFD1', 'AZRX1D1', 'AZSACD1']
+    new_excel = path.parent / f'{path.stem}_SDR{path.suffix}'
+    with pandas.ExcelWriter(new_excel, engine='openpyxl') as writer:
+        for sheet in sheets:
+            df = pandas.read_excel(path, sheet_name=sheet, header=None)
+            df.to_excel(writer, sheet_name=sheet, index=False, header=None)
+    return new_excel

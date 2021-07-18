@@ -14,5 +14,7 @@ class Command(BaseCommand):
     def handle(self, *args: Any, **options: Any) -> str:
         tmp = Path('/tmp/excels')
         tmp.mkdir(parents=True, exist_ok=True)
-        excel_name = models.download_the_first_psmc_excel_of_today(folder=tmp)
-        return f'[download], {excel_name}'
+        excel = models.download_the_first_psmc_excel_of_today(folder=tmp)
+        new_excel = models.extract_sheets_from_psmc_excel(excel)
+
+        return f'[download], {new_excel}'
