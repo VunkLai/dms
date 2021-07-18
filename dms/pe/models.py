@@ -60,6 +60,7 @@ def extract_sheets_from_psmc_excel(path: Path) -> Path:
     # pylint:disable=abstract-class-instantiated
     with pandas.ExcelWriter(new_excel, engine='openpyxl') as writer:
         for sheet in sheets:
-            data_frame = pandas.read_excel(path, sheet_name=sheet, header=None)
+            data_frame = pandas.read_excel(
+                path, sheet_name=sheet, header=None, engine='openpyxl')
             data_frame.to_excel(writer, sheet_name=sheet, index=False, header=None)
     return new_excel
