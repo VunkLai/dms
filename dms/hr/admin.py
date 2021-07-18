@@ -11,4 +11,5 @@ class GatewayModelAdmin(admin.ModelAdmin):
 
     @admin.display(ordering='employee__first_name')
     def employee_name(self, obj) -> str:
+        # pylint:disable=no-self-use
         return obj.employee.name

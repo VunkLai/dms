@@ -1,5 +1,4 @@
 import re
-from pathlib import Path
 from typing import Any, Dict, Generator, Iterable
 
 from django.conf import settings
@@ -22,7 +21,9 @@ def file_encode_handler(date: timezone.datetime) -> Iterable:
 
 
 def log_reader(date: timezone.datetime) -> Generator[Dict, Any, None]:
-    pat = re.compile('^.+\) values\s?\((?P<fields>.+)\)$')
+    # pylint:disable=broad-except
+    # just skip the invalid line
+    pat = re.compile(r'^.+\) values\s?\((?P<fields>.+)\)$')
     for line in file_encode_handler(date):
         try:
             fields = pat.search(line).group('fields').strip("'").split("','")
@@ -42,6 +43,7 @@ def log_reader(date: timezone.datetime) -> Generator[Dict, Any, None]:
 
 
 class GatewayManager(models.Manager):
+    # pylint:disable=too-few-public-methods
 
     pass
 
