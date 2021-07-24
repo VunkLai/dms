@@ -1,5 +1,6 @@
 django
 django-environ
+djangorestframework
 pymssql
 pandas
 openpyxl
