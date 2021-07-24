@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models, transaction
+from django.db.models import indexes
 from django.utils import timezone
 from django.utils.timezone import timedelta
 
@@ -43,11 +44,17 @@ class Gateway(models.Model):
     class Meta:
         db_table = 'hr_gateway'
         ordering = ['date', 'employee']
+        indexes = [
+            models.Index(fields=['date']),
+            models.Index(fields=['floor']),
+            models.Index(fields=['door']),
+        ]
 
     objects = GatewayManager()
     card_event = CardEvent()
 
-    date = models.DateTimeField(db_index=True)
+    date = models.DateTimeField()
     employee = models.ForeignKey('employee.Employee', on_delete=models.CASCADE)
+    floor = models.PositiveSmallIntegerField(default=1)
     door = models.CharField(max_length=79)
     card = models.CharField(max_length=30)
