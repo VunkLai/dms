@@ -1,6 +1,4 @@
 import typing
-from pathlib import Path
-from typing import Any, Dict, Generator
 
 from django.conf import settings
 from django.db import models

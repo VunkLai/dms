@@ -11,3 +11,9 @@ class CSVSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
         return instance
+
+    def create(self, validated_data):
+        pass
+
+    def update(self, instance, validated_data):
+        pass
