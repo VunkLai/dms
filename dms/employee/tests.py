@@ -3,9 +3,11 @@ from unittest import mock
 
 from django.contrib.admin.sites import AdminSite
 from django.test import TestCase
+from rest_framework import serializers
 
 from employee.admin import EmployeeModelAdmin
 from employee.models import Employee
+from employee.serializers import CSVSerializer
 
 
 class ModelTestCase(TestCase):
@@ -19,6 +21,53 @@ class ModelTestCase(TestCase):
         self.assertEqual(employee.name, 'Bar')
         self.assertEqual(employee.email, None)
         self.assertEqual(employee.group, None)
+
+
+class SerialierTestCase(TestCase):
+
+    def test_to_internal_value(self):
+        employee = dict(employee_id='1', employee_name='foo', group='b')
+        serializer = CSVSerializer(data=employee)
+        self.assertTrue(serializer.is_valid())
+
+    def test_to_internal_value_without_name_zh(self):
+        employee = dict(employee_id='1', employee_name_en='foo', group='b')
+        serializer = CSVSerializer(data=employee)
+        self.assertTrue(serializer.is_valid())
+
+    def test_to_internal_value_without_any_names(self):
+        employee = dict(employee_id='1', group='b')
+        serializer = CSVSerializer(data=employee)
+        self.assertFalse(serializer.is_valid())
+
+    def test_to_representation(self):
+        employee = dict(
+            employee_id='1',
+            employee_name='foo',
+            employee_name_en='bar',
+            group='b')
+        serializer = CSVSerializer(data=employee)
+        serializer.is_valid()
+
+        data = {'id': '1', 'name': 'foo', 'group': 'b'}
+        self.assertDictEqual(serializer.data, data)
+
+    def test_to_representation_without_name_zh(self):
+        employee = dict(
+            employee_id='1',
+            employee_name_en='bar',
+            group='b')
+        serializer = CSVSerializer(data=employee)
+        serializer.is_valid()
+
+        data = {'id': '1', 'name': 'bar', 'group': 'b'}
+        self.assertDictEqual(serializer.data, data)
+
+    def test_to_representation_without_any_names(self):
+        employee = dict(employee_id='1', group='b')
+        serializer = CSVSerializer(data=employee)
+        self.assertFalse(serializer.is_valid())
+        self.assertFalse(serializer.data)
 
 
 class BPMManagerTestCase(TestCase):

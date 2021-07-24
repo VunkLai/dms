@@ -6,28 +6,23 @@ from django.conf import settings
 from django.db import models
 
 import pymssql
+from employee.serializers import CSVSerializer
 from server.files import CSVFile
-
-
-def csv_reader(path: Path) -> Generator[Dict, Any, None]:
-    csv = CSVFile(path)
-    for row in csv.read():
-        yield dict(
-            id=row['employee_id'],
-            name=row['employee_name'] or row['employee_name_en'],
-            group=row['group']
-        )
 
 
 class DefaultManager(models.Manager):
 
     def loads(self) -> int:
         path = settings.BASE_DIR.parent / 'tmp/employee/members.csv'
+        csv = CSVFile(path)
         rows = 0
-        for row in csv_reader(path):
-            _, created = self.update_or_create(id=row['id'], defaults=row)
-            if created:
-                rows += 1
+        for row in csv.read():
+            serializer = CSVSerializer(data=row)
+            if serializer.is_valid():
+                _, created = self.update_or_create(
+                    id=serializer.data['id'], defaults=serializer.data)
+                if created:
+                    rows += 1
         return rows
 
 
