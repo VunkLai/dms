@@ -53,10 +53,13 @@ class CardEvent(models.Manager):
     def update_data(self, date: timezone.datetime) -> int:
         queryset = self.filter(date__range=[date, date+timedelta(days=1)])
         queryset.delete()
-        for log in log_reader(date):
-            self.create(**log)
+        try:
+            for log in log_reader(date):
+                self.create(**log)
+            return queryset.count()
+        except FileNotFoundError:
+            return 0
 
-        return queryset.count()
 
 
 class Gateway(models.Model):

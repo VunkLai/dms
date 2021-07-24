@@ -12,14 +12,8 @@ class Command(BaseCommand):
 
     def handle(self, *args: Any, **options: Any) -> Optional[str]:
         if options['action'] == 'update':
-            try:
-                today = Gateway.card_event.update_today()
-            except FileNotFoundError:
-                today = 0
-            try:
-                yesterday = Gateway.card_event.update_yesterday()
-            except FileNotFoundError:
-                yesterday = 0
+            today = Gateway.card_event.update_today()
+            yesterday = Gateway.card_event.update_yesterday()
             return (
                 '[Gateway] '
                 f'Today: {today} record(s), '
