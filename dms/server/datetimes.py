@@ -4,6 +4,15 @@ from django.utils import timezone
 
 class Datetime:
 
+    date = None
+
+    def __init__(self, date: timezone.datetime) -> None:
+        self.date = date
+
+    def range(self):
+        date = self.date.replace(**settings.FOUR_ZEROS)
+        return (date, date+timezone.timedelta(days=1))
+
     @staticmethod
     def today() -> timezone.datetime:
         '''Returns a Today datetime object
