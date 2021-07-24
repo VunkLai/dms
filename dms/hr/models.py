@@ -26,17 +26,16 @@ class CardEvent(models.Manager):
 
     @transaction.atomic
     def update_data(self, date: timezone.datetime) -> int:
-        queryset = self.filter(date__range=[date, date+timedelta(days=1)])
-        queryset.delete()
         file = File(settings.CARD_EVENT_DIR / f'{date.strftime("%Y%m%d")}.log')
-        try:
+        if file.is_file():
+            queryset = self.filter(date__range=[date, date+timedelta(days=1)])
+            queryset.delete()
             for line in file.read():
                 serializer = GatewayLogSerializer(data={'log': line, 'date': date})
                 if serializer.is_valid():
                     self.create(**serializer.data)
             return queryset.count()
-        except FileNotFoundError:
-            return 0
+        return 0
 
 
 class Gateway(models.Model):
