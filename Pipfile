@@ -10,6 +10,7 @@ djangorestframework = "*"
 pymssql = "*"
 pandas = "*"
 openpyxl = "*"
+pygsheets = "*"
 
 [dev-packages]
 pylint = "*"

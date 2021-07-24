@@ -4,3 +4,4 @@ djangorestframework
 pymssql
 pandas
 openpyxl
+pygsheets
