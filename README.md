@@ -64,3 +64,11 @@ python manage.py test dms
 ### SI test
 
 skip
+
+## TODO
+
+1. [x] PE PSMC excel
+2. [x] HR Gateway
+3. [ ] HR Gateway summary
+4. [ ] HR Health declaration
+5. [ ] FIN Cost center
