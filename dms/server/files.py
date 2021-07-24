@@ -16,6 +16,9 @@ class File:
             with self.path.open('r', encoding='utf-8-sig') as fr:
                 yield from fr
 
+    def exists(self):
+        return self.path.is_file()
+
 
 class CSVFile(File):
 

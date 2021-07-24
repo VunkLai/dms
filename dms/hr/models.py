@@ -27,7 +27,7 @@ class CardEvent(models.Manager):
     @transaction.atomic
     def update_data(self, date: timezone.datetime) -> int:
         file = File(settings.CARD_EVENT_DIR / f'{date.strftime("%Y%m%d")}.log')
-        if file.is_file():
+        if file.exists():
             queryset = self.filter(date__range=[date, date+timedelta(days=1)])
             queryset.delete()
             for line in file.read():
