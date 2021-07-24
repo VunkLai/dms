@@ -1,6 +1,5 @@
 from typing import Any, Optional
 
-from django.conf import settings
 from django.core.management.base import BaseCommand, CommandParser
 
 from employee.models import Employee
