@@ -7,24 +7,15 @@ from django.utils import timezone
 from django.utils.timezone import timedelta
 
 from employee.models import Employee
-
-
-def file_encode_handler(date: timezone.datetime) -> Iterable:
-    filename = date.strftime('%Y%m%d')
-    path = settings.CARD_EVENT_DIR / f'{filename}.log'
-    try:
-        with path.open('r', encoding='big5') as fr:
-            yield from fr
-    except UnicodeDecodeError:
-        with path.open('r', encoding='utf8') as fr:
-            yield from fr
+from server.files import File
 
 
 def log_reader(date: timezone.datetime) -> Generator[Dict, Any, None]:
     # pylint:disable=broad-except
     # just skip the invalid line
+    file = File(settings.CARD_EVENT_DIR / f'{date.strftime("%Y%m%d")}.log')
     pat = re.compile(r'^.+\) values\s?\((?P<fields>.+)\)$')
-    for line in file_encode_handler(date):
+    for line in file.read():
         try:
             fields = pat.search(line).group('fields').strip("'").split("','")
             # Date
