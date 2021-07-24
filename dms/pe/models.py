@@ -6,6 +6,7 @@ from django.db import models
 from django.utils import timezone
 
 import pandas
+from server.datetimes import Datetime
 from server.mails import MailServer
 
 
@@ -29,9 +30,7 @@ class PsmcExcel(models.Model):
 
 
 def download_the_first_psmc_excel_of_today() -> Optional[Path]:
-    # A datetime object corresponding to 00:00:00
-    # on the current date in the current time zone
-    today = timezone.localtime().replace(**settings.FOUR_ZEROS)
+    today = Datetime.today()
 
     folder = psmc_folder()
     folder.mkdir(parents=True, exist_ok=True)

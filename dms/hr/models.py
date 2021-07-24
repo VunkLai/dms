@@ -1,5 +1,5 @@
 import re
-from typing import Any, Dict, Generator, Iterable
+from typing import Any, Dict, Generator
 
 from django.conf import settings
 from django.db import models
@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.utils.timezone import timedelta
 
 from employee.models import Employee
+from server.datetimes import Datetime
 from server.files import File
 
 
@@ -44,17 +45,10 @@ class GatewayManager(models.Manager):
 class CardEvent(models.Manager):
 
     def update_today(self):
-        # A datetime object corresponding to 00:00:00
-        # on the current date in the current time zone
-        today = timezone.localtime().replace(**settings.FOUR_ZEROS)
-        return self.update_data(today)
+        return self.update_data(Datetime.today())
 
     def update_yesterday(self):
-        # A datetime object corresponding to 00:00:00
-        # on the current date in the current time zone
-        today = timezone.localtime().replace(**settings.FOUR_ZEROS)
-        yesterday = today - timedelta(days=1)
-        return self.update_data(yesterday)
+        return self.update_data(Datetime.yesterday())
 
     def update_data(self, date: timezone.datetime) -> int:
         queryset = self.filter(date__range=[date, date+timedelta(days=1)])
