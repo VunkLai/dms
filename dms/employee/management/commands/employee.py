@@ -12,17 +12,13 @@ class Command(BaseCommand):
 
     def handle(self, *args: Any, **options: Any) -> Optional[str]:
         if options['action'] == 'build':
-            try:
-                rows = Employee.objects.loads()
-                return f'[Employee] Add {rows} member(s)'
-            except Exception as e:
-                return f'[Employee] Error {e}'
+            rows = Employee.objects.loads()
+            total = Employee.objects.count()
+            return f'[Employee] Add {rows} member(s) of {total} members'
 
         if options['action'] == 'sync_bpm':
-            try:
-                rows = Employee.from_bpm.loads()
-                return f'[Employee] Add {rows} member(s)'
-            except Exception as e:
-                return f'[Employee] Error {e}'
+            rows = Employee.from_bpm.loads()
+            total = Employee.objects.count()
+            return f'[Employee] Add {rows} member(s) of {total} members'
 
         return '[Employee] do nothing'

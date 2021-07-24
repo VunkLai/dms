@@ -1,3 +1,4 @@
+import csv
 from pathlib import Path
 
 
@@ -11,8 +12,12 @@ class File:
             with self.path.open('r', encoding='big5') as fr:
                 yield from fr
         except UnicodeDecodeError:
-            with self.path.open('r', encoding='utf8') as fr:
+            # UTF8 with BOM
+            with self.path.open('r', encoding='utf-8-sig') as fr:
                 yield from fr
 
-    def csv(self):
-        pass
+
+class CSVFile(File):
+
+    def read(self):
+        yield from csv.DictReader(super().read())

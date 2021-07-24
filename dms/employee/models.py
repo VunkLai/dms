@@ -1,4 +1,3 @@
-import csv
 import typing
 from pathlib import Path
 from typing import Any, Dict, Generator
@@ -7,16 +6,12 @@ from django.conf import settings
 from django.db import models
 
 import pymssql
+from server.files import CSVFile
 
 
 def csv_reader(path: Path) -> Generator[Dict, Any, None]:
-    try:
-        with path.open('r', encoding='big5') as fr:
-            data = list(csv.DictReader(fr))
-    except UnicodeDecodeError:
-        with path.open('r', encoding='utf8') as fr:
-            data = list(csv.DictReader(fr))
-    for row in data:
+    csv = CSVFile(path)
+    for row in csv.read():
         yield dict(
             id=row['employee_id'],
             name=row['employee_name'] or row['employee_name_en'],
