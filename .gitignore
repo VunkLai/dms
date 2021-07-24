@@ -37,3 +37,6 @@ vscode/
 
 # Server tmp folder
 tmp/
+
+# GCP
+.credential.json

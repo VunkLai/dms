@@ -1,8 +1,10 @@
+from pathlib import Path
+
 from django.conf import settings
 from django.test import TestCase
 
 
-class MailSettingsTestCase(TestCase):
+class SettingsTestCase(TestCase):
 
     def test_settings(self):
         self.assertEqual(settings.EMAIL_HOST, 'smtp.office365.com')
@@ -24,3 +26,12 @@ class MailSettingsTestCase(TestCase):
         self.assertTrue(settings.EMAIL_HR_GATEWAY_TO)
         self.assertIsInstance(settings.EMAIL_HR_GATEWAY_TO, list)
         self.assertGreater(len(settings.EMAIL_HR_GATEWAY_TO), 0)
+
+    def test_gcp_credential(self):
+        self.assertTrue(settings.GCP_CREDENTIAL)
+        self.assertIsInstance(settings.GCP_CREDENTIAL, Path)
+        self.assertTrue(settings.GCP_CREDENTIAL.is_file())
+
+    def test_health_declaration_sheet(self):
+        self.assertTrue(settings.HEALTH_DECLARATION_SHEET)
+        self.assertIsInstance(settings.HEALTH_DECLARATION_SHEET, str)

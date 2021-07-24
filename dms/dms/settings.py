@@ -31,6 +31,9 @@ environ.Env.read_env(env_file=str(env_file))  # reading .env file
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.str('SECRET_KEY')
 
+GCP_CREDENTIAL = BASE_DIR.parent / '.credential.json'
+HEALTH_DECLARATION_SHEET = env.str('HEALTH_DECLARATION_SHEET')
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG')
 
