@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.db import models
+from django.db import models, transaction
 from django.utils import timezone
 from django.utils.timezone import timedelta
 
@@ -24,6 +24,7 @@ class CardEvent(models.Manager):
     def update_yesterday(self):
         return self.update_data(Datetime.yesterday())
 
+    @transaction.atomic
     def update_data(self, date: timezone.datetime) -> int:
         queryset = self.filter(date__range=[date, date+timedelta(days=1)])
         queryset.delete()

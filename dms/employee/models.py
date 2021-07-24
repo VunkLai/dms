@@ -1,7 +1,7 @@
 import typing
 
 from django.conf import settings
-from django.db import models
+from django.db import models, transaction
 
 import pymssql
 from employee.serializers import CSVSerializer
@@ -10,6 +10,7 @@ from server.files import CSVFile
 
 class DefaultManager(models.Manager):
 
+    @transaction.atomic
     def loads(self) -> int:
         path = settings.BASE_DIR.parent / 'tmp/employee/members.csv'
         csv = CSVFile(path)
@@ -40,6 +41,7 @@ class BusinessProcessManagement(models.Manager):
             FROM FSe7en_Org_MemberInfo
         ''')
 
+    @transaction.atomic
     def loads(self) -> int:
         rows = 0
         for member in self.select_all_members():
