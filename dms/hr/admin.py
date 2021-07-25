@@ -13,3 +13,20 @@ class GatewayModelAdmin(admin.ModelAdmin):
     def employee_name(self, obj) -> str:
         # pylint:disable=no-self-use
         return obj.employee.name
+
+
+@admin.register(models.HealthDeclaration)
+class HealthDeclaration(admin.ModelAdmin):
+    list_display = (
+        'date', 'employee_name', 'working_from',
+        'symptom', 'measuring_type', 'temperature', 'risk'
+    )
+    list_filter = (
+        'date', 'working_from', 'symptom', 'measuring_type',
+        'temperature', 'risk'
+    )
+
+    @admin.display(ordering='employee__first_name')
+    def employee_name(self, obj) -> str:
+        # pylint:disable=no-self-use
+        return obj.employee.name

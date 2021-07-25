@@ -1,16 +1,37 @@
-from typing import Dict, Generator, Optional
-from django.db import models
+from typing import Dict, Generator
+
+from django.conf import settings
+from django.db import models, transaction
+from django.utils import timezone
+
+from hr import serializers
+from hr.gcp import Sheet
+
+
 class HealthDeclarationManager(models.Manager):
     # pylint:disable=too-few-public-methods
 
-    def working_from_home(self):
+    def working_from_home(self) -> models.QuerySet:
         return self.get_queryset().filter(working_from='在家工作')
+
 
 class GoogleCloudPlatfromManager(models.Manager):
     # pylint:disable=too-few-public-methods
 
-    def loads(self, today=None) -> Generator[Dict, None, None]:
-        pass
+    @transaction.atomic
+    def loads(self, date: timezone.datetime) -> Generator[Dict, None, None]:
+        self.filter(date__date=date).delete()
+        sheet = Sheet(sheet_key=settings.HEALTH_DECLARATION_SHEET)
+        rows = 0
+        for row in sheet.rows(cols=11):
+            serializer = serializers.HealthDeclaration(data=row)
+            if serializer.is_valid():
+                if serializer.data['date'].date() == date.date():
+                    self.create(**serializer.data)
+                    rows += 1
+        return rows
+
+
 class HealthDeclaration(models.Model):
 
     class Meta:
@@ -23,7 +44,7 @@ class HealthDeclaration(models.Model):
         ]
 
     objects = HealthDeclarationManager()
-    gcp = GoogleCloudPlatfromManager()
+    from_gcp = GoogleCloudPlatfromManager()
 
     date = models.DateTimeField()
     working_from = models.CharField(max_length=16)
