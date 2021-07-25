@@ -2,7 +2,6 @@ from typing import Dict, Generator, Optional
 
 from django.conf import settings
 from django.db import models, transaction
-from django.db.models import Count
 from django.utils import timezone
 from django.utils.timezone import timedelta
 
@@ -53,7 +52,6 @@ class GatewayQuerySet(models.QuerySet):
 
 
 class GatewayManager(models.Manager):
-    # pylint:disable=too-few-public-methods
 
     def get_queryset(self) -> GatewayQuerySet:
         return GatewayQuerySet(self.model, using=self._db)
