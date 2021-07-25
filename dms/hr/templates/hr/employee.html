@@ -1,0 +1,14 @@
+<p>Dear All</p>
+<p>因應提升疫情警戒，即日起需填寫自主健康紀錄表，</p>
+<p>敬請同仁盡速至下列網址填寫，謝謝。</p>
+
+<br />
+<a href="https://forms.gle/hmSUEeiX6wiR9wST8">
+  https://forms.gle/hmSUEeiX6wiR9wST8
+</a>
+
+<hr />
+
+{% for employee in missed %}
+<div>{{ employee.id }} / {{ employee.name }} = {{ employee.group }}</div>
+{% endfor %}
