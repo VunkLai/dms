@@ -59,4 +59,22 @@ class Command(BaseCommand):
             date = today - timezone.timedelta(days=x)
             rows = Gateway.card_event.update_data(date)
             print(f'{date}: Add {rows} logs')
-        return '[Gateway] weekly done'
+
+        records = {}
+        last7days = today - timezone.timedelta(days=7)
+        for employee, count in Gateway.objects.weekly2(last7days):
+            color = 'red' if count > 3 else 'black'
+            records[employee] = {'count': count, 'color': color}
+        content = {'records': records}
+        template = render_to_string('hr/gateway_weekly2.html', content)
+
+        email = EmailMessage(
+            subject=f'{today.strftime("%F")} 上週進入公司天數統計',
+            body=template,
+            from_email=settings.EMAIL_HOST_USER,
+            to=[settings.EMAIL_JOY],
+            # cc, reply_to,
+        )
+        email.content_subtype = 'html'  # Main content is now text/html
+        result = email.send()
+        return f'result: {result}, recipient: {email.recipients()}'
