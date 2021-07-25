@@ -1,0 +1,7 @@
+{% for date, employees in records.items %} {{ date|date:"n月j日" }}
+<ul>
+  {% for employee in employees %}
+  <li>{{employee.id}} - {{employee.name}} ({{employee.group}})</li>
+  {% endfor %}
+</ul>
+{% endfor %}

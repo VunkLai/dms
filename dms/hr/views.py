@@ -48,3 +48,14 @@ def employee(request) -> HttpResponse:
         'missed': serializer.data
     }
     return render(request, 'hr/employee.html', content)
+
+
+def weekly(request) -> HttpResponse:
+    records = {}
+    today = Datetime.today()
+    for x in range(7):
+        date = today - timezone.timedelta(days=x)
+        print(date)
+        records[date] = Gateway.objects.weekly(date)
+    content = {'records': records}
+    return render(request, 'hr/gateway_weekly.html', content)

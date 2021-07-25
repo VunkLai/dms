@@ -77,6 +77,15 @@ class GatewayManager(models.Manager):
                 engine_10f=records.have_10f_engine,
             )
 
+    def weekly(self, date: timezone.datetime) -> None:
+        queryset = self.get_queryset().filter(date__date=date.date())
+        IDs = [e['employee__id'] for e in queryset.group_by('employee__id')]
+        employees = Employee.objects.filter(id__in=IDs).order_by('group')
+        print(employees)
+        if employees.exists():
+            return employees
+        return []
+
 
 class CardEvent(models.Manager):
 

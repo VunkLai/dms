@@ -5,6 +5,7 @@ from django.core.mail import EmailMessage
 from django.core.management import call_command
 from django.core.management.base import BaseCommand, CommandParser
 from django.template.loader import render_to_string
+from django.utils import timezone
 
 from hr import views
 from hr.models import Gateway
@@ -14,7 +15,7 @@ from server.datetimes import Datetime
 class Command(BaseCommand):
 
     def add_arguments(self, parser: CommandParser) -> None:
-        parser.add_argument('action', choices=['update', 'notify'])
+        parser.add_argument('action', choices=['update', 'notify', 'weekly'])
 
     def handle(self, *args: Any, **options: Any) -> str:
         if options['action'] == 'update':
@@ -23,6 +24,8 @@ class Command(BaseCommand):
             call_command('employee', 'build')
             self.update()
             return self.create()
+        if options['action'] == 'weekly':
+            return self.weekly()
         return '[Gateway] do nothing'
 
     def update(self):
@@ -49,3 +52,11 @@ class Command(BaseCommand):
         email.content_subtype = 'html'  # Main content is now text/html
         result = email.send()
         return f'result: {result}, recipient: {email.recipients()}'
+
+    def weekly(self):
+        today = Datetime.today()
+        for x in range(7):
+            date = today - timezone.timedelta(days=x)
+            rows = Gateway.card_event.update_data(date)
+            print(f'{date}: Add {rows} logs')
+        return '[Gateway] weekly done'
