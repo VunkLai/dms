@@ -55,7 +55,17 @@ def weekly(request) -> HttpResponse:
     today = Datetime.today()
     for x in range(7):
         date = today - timezone.timedelta(days=x)
-        print(date)
         records[date] = Gateway.objects.weekly(date)
     content = {'records': records}
     return render(request, 'hr/gateway_weekly.html', content)
+
+
+def weekly2(request) -> HttpResponse:
+    records = {}
+    today = Datetime.today()
+    last7days = today - timezone.timedelta(days=7)
+    for employee, count in Gateway.objects.weekly2(last7days):
+        color = 'red' if count > 3 else 'black'
+        records[employee] = {'count': count, 'color': color}
+    content = {'records': records}
+    return render(request, 'hr/gateway_weekly2.html', content)

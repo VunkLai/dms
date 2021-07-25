@@ -1,0 +1,18 @@
+<h3>上週進入公司天數統計</h3>
+<table border="1" style="border: 1px black solid">
+  <tr>
+    <th>工號</th>
+    <th>姓名</th>
+    <th>組別</th>
+    <th>天數</th>
+  </tr>
+
+  {% for employee, data in records.items %}
+  <tr>
+    <td>{{employee.id}}</td>
+    <td>{{employee.name}}</td>
+    <td>{{employee.group}}</td>
+    <td style="color: {{data.color}}">{{data.count}}</td>
+  </tr>
+  {% endfor %}
+</table>

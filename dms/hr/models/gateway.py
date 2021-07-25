@@ -81,10 +81,17 @@ class GatewayManager(models.Manager):
         queryset = self.get_queryset().filter(date__date=date.date())
         IDs = [e['employee__id'] for e in queryset.group_by('employee__id')]
         employees = Employee.objects.filter(id__in=IDs).order_by('group')
-        print(employees)
         if employees.exists():
             return employees
         return []
+
+    def weekly2(self, date: timezone.datetime) -> None:
+        queryset = self.get_queryset().filter(date__gt=date)
+        for result in queryset.group_by('employee__id').order_by('employee__group'):
+            employee_id = result['employee__id']
+            employee = Employee.objects.get(id=employee_id)
+            records = queryset.filter(employee__id=employee_id).group_by('date__date')
+            yield employee, records.count()
 
 
 class CardEvent(models.Manager):
