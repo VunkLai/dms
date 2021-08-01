@@ -26,5 +26,7 @@ urlpatterns = [
     path('sign_in/', views.sign_in),
     path('login/', views.login),
     path('logout/', views.logout),
-    path('hello/', views.hello_world)
+    path('hello/', views.hello_world),
+    # cost center
+    path('cost/', include('cost_center.urls')),
 ]

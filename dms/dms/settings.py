@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'employee',
     'pe',
     'hr',
+    'cost_center',
     'server',
 ]
 
