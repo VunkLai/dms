@@ -16,7 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
+from server import views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('hr/', include('hr.urls')),
+    # Login/Logout
+    path('', views.home),
+    path('sign_in/', views.sign_in),
+    path('login/', views.login),
+    path('logout/', views.logout),
+    path('hello/', views.hello_world)
 ]

@@ -158,6 +158,7 @@ disable=print-statement,
         missing-class-docstring,
 # `duplicate-code` is not only alart duplicated-codes but also checking imports.
         duplicate-code, # skip, it's too complex.
+        imported-auth-user,
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
@@ -318,7 +319,7 @@ function-naming-style=snake_case
 
 # Good variable names which should always be accepted, separated by a comma.
 # The words are perfectly clear for me
-good-names=e, fr, fw, fa, ok, x, s3, Prefix, sn, dt
+good-names=e, fr, fw, fa, ok, x, s3, Prefix, sn, dt, IDs
 
 # Good variable names regexes, separated by a comma. If names match any regex,
 # they will always be accepted

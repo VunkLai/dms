@@ -167,3 +167,8 @@ EMAIL_HR_GATEWAY_TO = env.list('EMAIL_HR_GATEWAY_TO')
 REMOTE_DIR = Path(env.str('REMOTE_DIR'))
 
 CARD_EVENT_DIR = REMOTE_DIR / 'card_event'
+
+# HR Users
+
+HRS = env.list('HRS')
+FQDN = env.str('FQDN')
