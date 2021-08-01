@@ -37,8 +37,13 @@ class BusinessProcessManagement(models.Manager):
 
     def select_all_members(self) -> typing.Generator:
         yield from self.execute('''
-            SELECT AccountID AS id, DisplayName AS name, EMail AS email
-            FROM FSe7en_Org_MemberInfo
+            SELECT DISTINCT M.AccountID AS id, M.DisplayName AS name,
+                D.DeptID AS dep_id, D.DisplayName DName AS dep_name
+            FROM FSe7en_Org_MemberStruct S
+            LEFT JOIN FSe7en_Lang_MemberInfo M on M.AccountID = S.AccountID
+            LEFT JOIN FSe7en_Lang_DeptInfo D on S.DeptID = D.DeptID
+            WHERE M.Lang='zh-tw' AND D.Lang='zh-tw' AND S.Version='3' AND S.IsMainJob='1'
+            AND (M.AccountID!='administrator' AND M.AccountID!='apm.audit1' AND M.AccountID!='apm.audit2')
         ''')
 
     @transaction.atomic
@@ -65,5 +70,11 @@ class Employee(models.Model):
 
     id = models.CharField(max_length=30, primary_key=True)
     name = models.CharField(max_length=79)
+    dep_id = models.CharField(max_length=79)
+    dep_name = models.CharField(max_length=79)
     email = models.EmailField(**settings.NULLABLE)
     group = models.CharField(max_length=1, **settings.NULLABLE)
+
+    @property
+    def region(self):
+        return self.id[:3]
