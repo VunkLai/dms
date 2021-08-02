@@ -49,8 +49,8 @@ def update(request, employee_id: str):
     employee = get_object_or_404(Employee, pk=employee_id)
     try:
         post = json.loads(request.body)
-        CostCenter.objects.update_centers(employee, centers=post['centers'])
-        return JsonResponse({'status': 'ok', 'message': 'OK'})
+        adds, deletes = update_centers(employee, post['centers'], request.user)
+        return JsonResponse({'status': 'ok', 'message': f'add: {adds}, delete: {deletes}'})
     except KeyError:
         return JsonResponse(
             {'status': 'error', 'message': 'centers not found'}, status=400)

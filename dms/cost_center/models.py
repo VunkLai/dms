@@ -1,6 +1,7 @@
 import typing
 
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.db import models, transaction
 
 import pymssql
@@ -69,10 +70,7 @@ class BusinessProcessManagement(models.Manager):
 
 class CostCenterManager(models.Manager):
 
-    def update_centers(self, employee: Employee, centers: typing.List) -> int:
-        rows = 0
-        pass
-        return rows
+    pass
 
 
 class CostCenter(models.Model):
@@ -85,3 +83,30 @@ class CostCenter(models.Model):
 
     employee = models.ForeignKey('employee.Employee', related_name='centers', on_delete=models.CASCADE)
     name = models.CharField(max_length=79)
+
+
+class UpdateRecords(models.Model):
+
+    class Meta:
+        db_table = 'cost_center_record'
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    employee = models.ForeignKey('employee.Employee', on_delete=models.CASCADE)
+    centers = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+@transaction.atomic
+def update_centers(employee: Employee, centers: typing.List[str], user: User):
+    UpdateRecords.objects.create(user=user, employee=employee, centers=','.join(centers))
+    deletes = 0
+    for center in employee.centers.all():
+        if not center.name in centers:
+            center.delete()
+            deletes += 1
+    adds = 0
+    for center_name in centers:
+        if not employee.centers.filter(name=center_name).exists():
+            CostCenter.objects.create(employee=employee, name=center_name)
+            adds += 1
+    return adds, deletes
