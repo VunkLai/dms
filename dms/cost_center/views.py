@@ -1,4 +1,8 @@
+import json
+
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.views.decorators.http import require_http_methods
 from rest_framework import serializers
 
 from cost_center.models import CostCenter
@@ -21,6 +25,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
         ]
 
 
+@require_http_methods(['GET'])
 def employees(request):
     '''API'''
     employees = Employee.objects.all()
@@ -28,8 +33,16 @@ def employees(request):
     return JsonResponse({'employees': serializer.data})
 
 
-def add(request, employee_id: str, cost_center: str):
-    '''API'''
-    employee = Employee.objects.get(id=employee_id)
-    CostCenter.objects.create(employee=employee, name=cost_center)
-    return JsonResponse({'status': 'ok'})
+@require_http_methods(['POST'])
+def update(request, employee_id: str):
+    employee = get_object_or_404(Employee, pk=employee_id)
+    try:
+        post = json.loads(request.body)
+        CostCenter.objects.update_centers(employee, centers=post['centers'])
+        return JsonResponse({'status': 'ok', 'message': 'OK'})
+    except KeyError:
+        return JsonResponse(
+            {'status': 'error', 'message': 'centers not found'}, status=400)
+    except ValueError:
+        return JsonResponse(
+            {'status': 'error', 'message': 'centers is empty'}, status=400)

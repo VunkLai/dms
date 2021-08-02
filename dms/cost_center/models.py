@@ -68,7 +68,11 @@ class BusinessProcessManagement(models.Manager):
 
 
 class CostCenterManager(models.Manager):
-    pass
+
+    def update_centers(self, employee: Employee, centers: typing.List) -> int:
+        rows = 0
+        pass
+        return rows
 
 
 class CostCenter(models.Model):
