@@ -3,10 +3,18 @@
 <!-- Vuetify Data-Table -->
 
 {% block content %}
+<v-row>
+  <v-col>
+    <v-text-field v-model="filter.id" label="Employee ID"></v-text-field>
+  </v-col>
+  <v-col>
+    <v-text-field v-model="filter.name" label="Employee Name"></v-text-field>
+  </v-col>
+</v-row>
 
 <v-data-table
   :headers="table.headers"
-  :items="table.items"
+  :items="filteredItem"
   sort-by="employee_id"
 >
   <template v-slot:top>
@@ -90,6 +98,12 @@
 <!-- Vue -->
 
 {% block javascript %}
+<script
+  src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"
+  integrity="sha256-qXBd/EfAdjOA2FGrGAG+b3YBn2tn5A6bhz+LSgYD96k="
+  crossorigin="anonymous"
+></script>
+
 <script>
   function getCookie(name) {
     let cookieValue = null;
@@ -117,11 +131,15 @@
           { text: "ID", value: "employee_id" },
           { text: "Name", value: "employee_name" },
           { text: "Dep. ID", value: "department_id" },
-          { text: "Department", value: "department_name" },
+          { text: "Dep. Name", value: "department_name" },
           { text: "Center", value: "centers" },
           { text: "Actions", value: "actions", sortable: false },
         ],
         items: [],
+      },
+      filter: {
+        id: "",
+        name: "",
       },
       // dialogs
       dialogEdit: false,
@@ -149,6 +167,25 @@
             this.selectedItem = Object.assign({}, this.defaultItem);
           });
         }
+      },
+    },
+    computed: {
+      filteredItem() {
+        let items = this.table.items;
+        if (this.filter.id) {
+          items = items.filter((item) => {
+            return (
+              _.endsWith(item.employee_id, this.filter.id) ||
+              _.startsWith(item.employee_id, this.filter.id)
+            );
+          });
+        }
+        if (this.filter.name) {
+          items = items.filter((item) => {
+            return item.employee_name.includes(this.filter.name);
+          });
+        }
+        return items;
       },
     },
     created() {
