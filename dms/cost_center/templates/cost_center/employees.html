@@ -67,10 +67,17 @@
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="12" md="12">
-                  <v-text-field
+                  <v-combobox
                     v-model="selectedItem.centers"
                     label="Cost Centers"
-                  ></v-text-field>
+                    multiple
+                    small-chips
+                  >
+                    <template v-slot:item="{ index, item }">
+                      <v-chip label small> {{ item.text }} </v-chip>
+                      <v-spacer></v-spacer>
+                    </template>
+                  </v-combobox>
                 </v-col>
               </v-row>
             </v-container>
@@ -159,6 +166,8 @@
         department_name: null,
         centers: [],
       },
+      nonce: 1,
+      colors: ["green", "purple", "indigo", "cyan", "teal", "orange"],
     },
     watch: {
       dialogEdit(val) {
