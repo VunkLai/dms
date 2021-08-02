@@ -7,15 +7,19 @@ from employee.models import Employee
 
 
 class EmployeeSerializer(serializers.ModelSerializer):
+    employee_id = serializers.CharField(source='id')
+    employee_name = serializers.CharField(source='name')
+    department_id = serializers.CharField(source='dep_id')
+    department_name = serializers.CharField(source='dep_name')
     centers = serializers.SlugRelatedField(
-        many=True,
-        read_only=True,
-        slug_field='name'
-    )
+        many=True, read_only=True, slug_field='name')
 
     class Meta:
         model = Employee
-        fields = ['id', 'name', 'centers']
+        fields = [
+            'employee_id', 'employee_name', 'department_id', 'department_name',
+            'centers'
+        ]
 
 
 def home(request):
