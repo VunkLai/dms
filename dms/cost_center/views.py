@@ -1,5 +1,4 @@
 from django.http import JsonResponse
-from django.shortcuts import render
 from rest_framework import serializers
 
 from cost_center.models import CostCenter
@@ -20,13 +19,6 @@ class EmployeeSerializer(serializers.ModelSerializer):
             'employee_id', 'employee_name', 'department_id', 'department_name',
             'centers'
         ]
-
-
-def home(request):
-    '''HTML'''
-    employees = Employee.objects.all()
-    content = {'employees': employees}
-    return render(request, 'cost_center/employees.html', content)
 
 
 def employees(request):
