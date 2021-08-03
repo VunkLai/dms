@@ -28,6 +28,7 @@
       <!-- Edit dialog -->
       <v-dialog v-model="dialogEdit" max-width="500px">
         <template v-slot:activator="{ on, attrs }">
+          <v-btn color="blue darken-1" text @click="logout"> logout </v-btn>
           {{ user.username|title }}
         </template>
         <v-card>
@@ -234,6 +235,9 @@
             this.dialogEdit = false;
           })
           .catch((err) => console.error(err));
+      },
+      logout() {
+        window.location.href = "http://localhost:8000/logout/";
       },
     },
   });
