@@ -1,5 +1,5 @@
 import typing
-from abc import ABCMeta, abstractstaticmethod
+from abc import ABCMeta, abstractmethod
 
 from django.conf import settings
 
@@ -9,7 +9,8 @@ from server.files import CSVFile
 
 class Loader(metaclass=ABCMeta):
 
-    @abstractstaticmethod
+    @staticmethod
+    @abstractmethod
     def loads() -> int:
         pass
 
@@ -31,6 +32,8 @@ class BPMLoader(Loader):
 
     @staticmethod
     def loads() -> typing.Generator:
+        # pylint:disable=no-member
+        # E1101: Module 'pymssql' has no 'connect' member (no-member)
         sql = '''
             SELECT DISTINCT M.AccountID AS id, M.DisplayName AS name,
                 D.DeptID AS dep_id, D.DisplayName DName AS dep_name

@@ -1,14 +1,10 @@
-from __future__ import annotations
-
 import typing
 
+from django.contrib.auth.models import User
 from django.db import models, transaction
 
-if typing.TYPE_CHECKING:
-    from django.contrib.auth.models import User
-
-    from cost_center.datasource import Loader
-    from employee.models import Employee
+from cost_center.datasource import Loader
+from employee.models import Employee
 
 
 class CostCenterManager(models.Manager):

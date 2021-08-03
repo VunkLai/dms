@@ -36,8 +36,8 @@ def employees(request):
     if not request.user.is_authenticated:
         data = {'status': 'error', 'message': 'anonymous is not authorized to perform'}
         return JsonResponse(data, status=403)
-    employees = Employee.objects.all()
-    serializer = EmployeeSerializer(employees, many=True)
+    queryset = Employee.objects.all()
+    serializer = EmployeeSerializer(queryset, many=True)
     return JsonResponse({'employees': serializer.data})
 
 
