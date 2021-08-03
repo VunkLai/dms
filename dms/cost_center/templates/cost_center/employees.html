@@ -173,6 +173,7 @@
     watch: {
       dialogEdit(val) {
         if (!val) {
+          this.initialize();
           this.$nextTick(() => {
             this.selectedItem = Object.assign({}, this.defaultItem);
           });
