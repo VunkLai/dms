@@ -159,6 +159,7 @@ disable=print-statement,
 # `duplicate-code` is not only alart duplicated-codes but also checking imports.
         duplicate-code, # skip, it's too complex.
         imported-auth-user,
+        hard-coded-auth-user,
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option

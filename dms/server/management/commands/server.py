@@ -20,6 +20,6 @@ class Command(BaseCommand):
                 user.is_superuser = True
                 user.is_staff = True
                 user.save()
-            call_command('employee', 'build')
+            call_command('employee', 'csv')
             return '[server] rebuild successfully'
         return '[server] do nothing'
