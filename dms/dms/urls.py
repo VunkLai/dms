@@ -22,11 +22,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('hr/', include('hr.urls')),
     # Login/Logout
-    path('', views.home),
     path('sign_in/', views.sign_in),
     path('login/', views.login),
     path('logout/', views.logout),
-    path('hello/', views.hello_world),
     # cost center
     path('cost/', include('cost_center.urls')),
 ]
