@@ -3,7 +3,8 @@ build:
 	docker build -t dms:latest .
 
 check:
-	safety check
+	# 41002: the latest release version of coverage.py is 5.5
+	safety check --full-report --ignore=41002
 	pylint --django-settings-module=dms.settings dms/*
 	bandit -r dms/
 	python dms/manage.py check
