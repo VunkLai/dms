@@ -37,3 +37,6 @@ class Employee(models.Model):
     @property
     def region(self) -> str:
         return self.id[:3]
+
+    def values(self):
+        return [self.region, self.id, self.name, self.dep_id, self.name]

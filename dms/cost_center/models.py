@@ -3,7 +3,7 @@ from typing import List, Tuple
 from django.contrib.auth.models import User
 from django.db import models, transaction
 
-from cost_center.datasource import Loader
+from cost_center.datasource import BPMAdapter, Loader
 from employee.models import Employee
 
 
@@ -43,16 +43,19 @@ class UpdateRecords(models.Model):
 
 @transaction.atomic
 def update_centers(employee: Employee, centers: List[str], user: User) -> Tuple[int]:
+    db = BPMAdapter()
     UpdateRecords.objects.create(
         user=user, employee=employee, centers=','.join(centers))
     deletes = 0
     for center in employee.centers.all():
         if not center.name in centers:
             center.delete()
+            db.delete(employee, center.name)
             deletes += 1
     adds = 0
     for center_name in centers:
         if not employee.centers.filter(name=center_name).exists():
             CostCenter.objects.create(employee=employee, name=center_name)
+            db.insert(employee, center_name)
             adds += 1
     return adds, deletes
