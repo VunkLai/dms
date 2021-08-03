@@ -1,4 +1,4 @@
-import typing
+from typing import List, Tuple
 
 from django.contrib.auth.models import User
 from django.db import models, transaction
@@ -42,8 +42,9 @@ class UpdateRecords(models.Model):
 
 
 @transaction.atomic
-def update_centers(employee: Employee, centers: typing.List[str], user: User):
-    UpdateRecords.objects.create(user=user, employee=employee, centers=','.join(centers))
+def update_centers(employee: Employee, centers: List[str], user: User) -> Tuple[int]:
+    UpdateRecords.objects.create(
+        user=user, employee=employee, centers=','.join(centers))
     deletes = 0
     for center in employee.centers.all():
         if not center.name in centers:
